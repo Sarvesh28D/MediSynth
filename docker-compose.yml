@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  medisynth:
+    build: .
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./temp:/app/temp
+    environment:
+      - ASR_MODEL_SIZE=base
+      - DEBUG_MODE=true
+      - USE_GPU_FOR_NLP=false
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
